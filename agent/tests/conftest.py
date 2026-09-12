@@ -81,6 +81,7 @@ _INTEGRATION_VARS = (
 #: Which model answers, and as whom.
 _MODEL_AND_IDENTITY_VARS = (
     "OPENAI_API_KEY",
+    "OPENROUTER_API_KEY",
     "OPENAI_MODEL",
     "OPENAI_REASONING_EFFORT",
     "OPENAI_VERBOSITY",
@@ -98,6 +99,7 @@ _SERVER_VARS = (
     "SERVER_HOST",
     "SERVER_PORT",
     "AGENT_RELOAD",
+    "BROWSER_HEADLESS",
 )
 
 DEPLOYMENT_VARS = (*_INTEGRATION_VARS, *_MODEL_AND_IDENTITY_VARS, *_SERVER_VARS)
@@ -168,4 +170,3 @@ def _server_import_env_is_the_suite_s_own():
 def _the_configuration_is_the_test_s_own(monkeypatch: pytest.MonkeyPatch) -> None:
     for name in SCRUBBED_VARS:
         monkeypatch.delenv(name, raising=False)
-

@@ -6,7 +6,7 @@ SKILLS = Path(__file__).resolve().parents[1] / "coding" / "skills"
 
 
 def test_coder_prompt_forbids_linear_and_requires_green_check():
-    assert "You are the OpenTag coder" in CODER_PROMPT
+    assert "You are the Flow coder" in CODER_PROMPT
     assert "prepare_repository" in CODER_PROMPT
     assert "publish_changes" in CODER_PROMPT
     assert "Never clone, pull, fetch, or push with git" in CODER_PROMPT

@@ -1,6 +1,6 @@
 <div align="center">
 
-# OpenTag
+# Flow
 
 **An open-source, self-hosted knowledge-work agent for Slack and Microsoft Teams — connected tools and generative UI included.**
 
@@ -25,7 +25,7 @@ already is.
 ## The Channels SDK starter application
 
 [Channels SDK](https://github.com/CopilotKit/channels-sdk) brings any AG-UI agent
-into Slack and Microsoft Teams. Its README shows you the pieces. **OpenTag is
+into Slack and Microsoft Teams. Its README shows you the pieces. **Flow is
 those pieces assembled into something you would actually deploy** — and it is
 built to be taken, not just read.
 
@@ -182,8 +182,20 @@ INTELLIGENCE_CHANNEL_NAME=open-tag
 # Optional: assign OpenTag Threads to an existing Learning Container.
 INTELLIGENCE_LEARNING_CONTAINER_ID=support-quality
 # Optional: use another user-facing identity, such as Kite.
-AGENT_DISPLAY_NAME=OpenTag
+AGENT_DISPLAY_NAME=Flow
 ```
+
+For local development, you can alternatively route the agent through a locally
+running `openai-oauth` proxy:
+
+```bash
+npx openai-oauth@latest
+export OPENAI_OAUTH_BASE_URL=http://127.0.0.1:10531/v1
+export OPENAI_MODEL=<model reported by the proxy>
+```
+
+This path uses the developer's local ChatGPT session and is not suitable for a
+deployed service; use `OPENAI_API_KEY` on Railway.
 
 Both the Node runtime and the Python agent load this one root `.env`; Railway
 supplies the same values as service variables. Tavily, GitHub, PostHog, Linear,
@@ -199,6 +211,15 @@ an existing Learning Container in the project selected by
 `INTELLIGENCE_API_KEY`; when omitted, OpenTag does not assign Threads to a
 Learning Container.
 
+### Browser automation
+
+Flow has an isolated Chromium session for each conversation. It can open pages,
+read them, click controls, fill forms, and use normal keyboard interactions;
+cookies stay in that conversation until Flow closes the session or the agent
+restarts. The agent image installs Chromium during its build, so local source
+development only needs the existing `pnpm dev` setup step. Keep
+`BROWSER_HEADLESS=true` (the default) for deployed services.
+
 ### 4. Run the stack
 
 ```bash
@@ -213,7 +234,7 @@ become ready before its HTTP listener accepts traffic.
 ### 5. Invite the bot
 
 ```text
-/invite @OpenTag
+/invite @Flow
 ```
 
 Installed in the workspace is not the same as present in a conversation. Slack
@@ -226,7 +247,7 @@ A Channel that installs cleanly and answers nothing is the most expensive
 failure available here, because it looks finished. Three checks separate the
 two. Send them from a real human account:
 
-1. **Mention it.** `@OpenTag what changed in the last deploy?` — expect a
+1. **Mention it.** `@Flow what changed in the last deploy?` — expect a
    useful, model-backed reply.
 2. **Follow up without mentioning it,** in that same thread — expect a reply.
    A mention subscribes the thread; unmentioned messages run the agent only in
@@ -277,7 +298,7 @@ or one directory, and none of them require touching the Channel lifecycle.
 
 | To change…                   | Edit                                                                                             | Notes                                                                                                                   |
 | ---------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| The user-facing name         | `AGENT_DISPLAY_NAME`                                                                             | Defaults to `OpenTag`; set it once for the agent persona and capability UI                                              |
+| The user-facing name         | `AGENT_DISPLAY_NAME`                                                                             | Defaults to `Flow`; set it once for the agent persona and capability UI                                                 |
 | The persona and behavior     | [`agent/prompts/`](./agent/prompts)                                                              | `system.py` holds the base system prompt                                                                                |
 | The agent itself             | [`agent/agent.py`](./agent/agent.py)                                                             | A LangGraph deep agent; model and reasoning effort come from the environment                                            |
 | **The agent framework**      | `AGENT_URL`                                                                                      | Point it at _any_ AG-UI-compatible agent. The runtime speaks AG-UI over HTTP and does not care what is on the other end |

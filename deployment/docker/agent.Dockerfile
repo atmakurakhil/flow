@@ -9,6 +9,7 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV UV_COMPILE_BYTECODE=1
 ENV UV_LINK_MODE=copy
+ENV PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
 WORKDIR /app
 COPY --from=uv /uv /uvx /bin/
 COPY agent/pyproject.toml agent/uv.lock ./
@@ -20,6 +21,7 @@ COPY agent/coding ./coding
 COPY agent/composio_tools ./composio_tools
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync --frozen --no-dev \
+    && uv run playwright install --with-deps chromium \
     && useradd --uid 10001 --create-home --home-dir /home/opentag opentag
 ENV PATH=/app/.venv/bin:$PATH
 USER opentag

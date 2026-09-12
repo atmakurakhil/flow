@@ -38,6 +38,8 @@ def build_with_captured_configuration(monkeypatch, source_toolsets=None):
     captured = {}
 
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_OAUTH_BASE_URL", raising=False)
     monkeypatch.delenv("TAVILY_API_KEY", raising=False)
     monkeypatch.delenv("GITHUB_PERSONAL_ACCESS_TOKEN", raising=False)
     monkeypatch.delenv("POSTHOG_PERSONAL_API_KEY", raising=False)
@@ -101,6 +103,40 @@ def test_build_agent_defaults_to_low_reasoning_and_verbosity(monkeypatch):
     assert captured["model"]["reasoning_effort"] == "low"
     assert captured["model"]["verbosity"] == "low"
     assert captured["model"]["use_responses_api"] is True
+
+
+def test_build_agent_uses_openrouter_chat_completions(monkeypatch):
+    _, captured = build_with_captured_configuration(monkeypatch)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.setenv("OPENROUTER_API_KEY", "or-test")
+    monkeypatch.setenv("OPENAI_MODEL", "acme/model")
+    captured.clear()
+
+    agent_mod.build_agent()
+
+    assert captured["model"] == {
+        "model": "acme/model",
+        "api_key": "or-test",
+        "base_url": "https://openrouter.ai/api/v1",
+    }
+
+
+def test_build_agent_uses_openai_oauth_responses_proxy(monkeypatch):
+    _, captured = build_with_captured_configuration(monkeypatch)
+    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.setenv("OPENAI_OAUTH_BASE_URL", "http://127.0.0.1:10531/v1/")
+    monkeypatch.setenv("OPENAI_MODEL", "gpt-5.6-terra")
+    captured.clear()
+
+    agent_mod.build_agent()
+
+    assert captured["model"] == {
+        "model": "gpt-5.6-terra",
+        "api_key": "openai-oauth",
+        "base_url": "http://127.0.0.1:10531/v1",
+        "use_responses_api": True,
+    }
 
 
 def test_build_agent_accepts_valid_reasoning_and_verbosity_overrides(monkeypatch):
@@ -208,6 +244,15 @@ def test_openai_harness_excludes_unusable_delegation_tools(monkeypatch):
 
     assert "execute" not in tool_names
     assert "task" not in tool_names
+    assert {
+        "browser_navigate",
+        "browser_snapshot",
+        "browser_click",
+        "browser_fill",
+        "browser_press",
+        "browser_select_option",
+        "browser_close",
+    }.issubset(tool_names)
     assert {"write_todos", "read_file", "write_file"}.issubset(tool_names)
 
 

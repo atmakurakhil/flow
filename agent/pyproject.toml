@@ -1,7 +1,7 @@
 [project]
 name = "opentag-agent"
 version = "0.1.0"
-description = "OpenTag general-purpose team knowledge-work agent — CopilotKit Deep Agents (LangGraph) over AG-UI"
+description = "Flow general-purpose team knowledge-work agent — CopilotKit Deep Agents (LangGraph) over AG-UI"
 requires-python = ">=3.12"
 dependencies = [
   "ag-ui-langgraph>=0.0.23",
@@ -18,6 +18,9 @@ dependencies = [
   "langchain-mcp-adapters>=0.3.0",
   "langchain-openai>=1.1.7",
   "python-dotenv>=1.2.1",
+  # Keep this aligned with the renderer's pinned Playwright release so
+  # `pnpm dev` installs the Chromium that Flow's tools launch.
+  "playwright>=1.62.0,<1.63.0",
   "pyjwt[crypto]>=2.10.1",
   "tavily-python>=0.3.0",
   "uvicorn[standard]>=0.40.0",
@@ -37,6 +40,7 @@ py-modules = [
   "agent",
   "agent_auth",
   "agui",
+  "browser",
   "internal_sources",
   "main",
   "tools",

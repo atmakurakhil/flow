@@ -3,7 +3,7 @@ export const DEFAULT_INTELLIGENCE_API_URL =
 export const DEFAULT_INTELLIGENCE_GATEWAY_WS_URL =
   "wss://realtime.intelligence.copilotkit.ai";
 export const DEFAULT_INTELLIGENCE_CHANNEL_NAME = "open-tag";
-export const DEFAULT_AGENT_DISPLAY_NAME = "OpenTag";
+export const DEFAULT_AGENT_DISPLAY_NAME = "Flow";
 
 export interface AppEnvironment {
   agentDisplayName: string;

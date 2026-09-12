@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Flow turns the conversations your team is already having into clear, approved work—inside Slack." />
+    <title>Flow — work moves when the context is clear</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./flow.css" />
+  </head>
+  <body>
+    <div class="cursor-glow" aria-hidden="true"></div>
+    <div class="scroll-line" aria-hidden="true"><span></span></div>
+
+    <header class="site-header">
+      <a class="brand" href="#top" aria-label="Flow home"><span class="brand-orb"></span>flow</a>
+      <nav aria-label="Primary navigation">
+        <a href="#how">How it works</a>
+        <a href="#proof">In the thread</a>
+        <a class="nav-cta" href="#get-flow">Explore Flow <span>↗</span></a>
+      </nav>
+    </header>
+
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-aura" aria-hidden="true"></div>
+        <div class="hero-copy">
+          <p class="overline intro-item"><span class="live-dot"></span> Flow for teams in motion</p>
+          <p class="hero-brand intro-item">flow<span>®</span></p>
+          <h1 id="hero-title" class="intro-item">Decide once.<br /><em>Move together.</em></h1>
+          <p class="hero-description intro-item">Flow turns the conversations your team is already having into clear, approved work—without leaving Slack.</p>
+          <div class="hero-actions intro-item">
+            <a class="button button-dark" href="#proof">See Flow in action <span>↓</span></a>
+            <button class="play-link" type="button" data-play-flow><i>▶</i> Watch the flow</button>
+          </div>
+        </div>
+
+        <div class="hero-product intro-item" aria-label="An example Flow response in Slack">
+          <div class="product-label"><span>Flow in Slack</span><span>Live context</span></div>
+          <div class="message-bubble message-human">
+            <span class="mini-avatar maya">M</span>
+            <p><b>Maya</b><br />Are we shipping the guided setup fix this week?</p>
+          </div>
+          <div class="typing-row"><span class="flow-avatar">f</span><span class="typing-copy">Flow is reviewing the thread</span><span class="typing-dots"><i></i><i></i><i></i></span></div>
+          <div class="flow-answer">
+            <div class="answer-top"><span class="flow-avatar">f</span><b>Flow</b><small>now</small></div>
+            <p>Yes — the experiment improved activation by <strong>12.4%</strong>. One rollout risk needs your approval.</p>
+            <div class="answer-footer"><span>Decision brief ready</span><button type="button" data-play-flow>Review brief <b>→</b></button></div>
+          </div>
+          <p class="product-note">No new tab. No forgotten context.</p>
+        </div>
+
+        <div class="hero-marquee" aria-hidden="true"><span>CONTEXT</span><i>✳</i><span>CLARITY</span><i>✳</i><span>CONSENT</span><i>✳</i><span>DELIVERY</span><i>✳</i><span>CONTEXT</span></div>
+      </section>
+
+      <section class="statement section-pad" aria-labelledby="statement-title">
+        <p class="section-kicker reveal">01 — Why Flow</p>
+        <div class="statement-layout">
+          <h2 id="statement-title" class="reveal">A good decision<br />shouldn’t get <em>lost</em><br />in a good conversation.</h2>
+          <p class="large-copy reveal">Flow works where the conversation happens. It connects your team’s context, surfaces the signal, and waits for the human “yes” before anything moves.</p>
+        </div>
+      </section>
+
+      <section id="how" class="steps section-pad" aria-labelledby="steps-title">
+        <div class="steps-heading">
+          <p class="section-kicker reveal">02 — The flow</p>
+          <h2 id="steps-title" class="reveal">Less chasing.<br /><em>More momentum.</em></h2>
+        </div>
+        <ol class="step-list">
+          <li class="reveal"><span class="step-no">01</span><div><p>Listen</p><h3>It reads before it asks.</h3></div><span>Flow follows the thread, project docs, and product signals so your team doesn’t have to repeat itself.</span></li>
+          <li class="reveal"><span class="step-no">02</span><div><p>Clarify</p><h3>It makes the call visible.</h3></div><span>Options, evidence, owners, and the actual open question return to the same place the work started.</span></li>
+          <li class="reveal"><span class="step-no">03</span><div><p>Move</p><h3>It waits for approval.</h3></div><span>When the team agrees, Flow can create the issue, update the knowledge, or prepare a draft pull request.</span></li>
+        </ol>
+      </section>
+
+      <section id="proof" class="proof" aria-labelledby="proof-title">
+        <div class="proof-copy section-pad">
+          <p class="section-kicker reveal">03 — In the thread</p>
+          <h2 id="proof-title" class="reveal">Nothing happens<br />behind your back.</h2>
+          <p class="reveal">Flow shows its recommendation, the source behind it, and the exact action it is about to take. The person who owns the decision stays in charge.</p>
+          <div class="proof-points reveal">
+            <span><b>01</b> Sources stay visible</span>
+            <span><b>02</b> Approval is explicit</span>
+            <span><b>03</b> The handoff is traceable</span>
+          </div>
+        </div>
+        <figure class="slack-proof reveal">
+          <div class="shot-chrome"><span>Slack / Product</span><span>Flow → human confirmation</span></div>
+          <img src="../assets/demo-approval.png" alt="A Flow approval message posted in a Slack thread" />
+          <figcaption><span>Actual Flow output</span><span>Approval required</span></figcaption>
+        </figure>
+      </section>
+
+      <section class="connections section-pad" aria-labelledby="connections-title">
+        <p class="section-kicker reveal">04 — Connected context</p>
+        <div class="connections-top">
+          <h2 id="connections-title" class="reveal">The places your<br />team already <em>trusts.</em></h2>
+          <p class="reveal">Flow doesn’t replace your stack. It brings the relevant pieces together when a decision needs them.</p>
+        </div>
+        <div class="tool-list reveal" role="list">
+          <span role="listitem">Slack <i>Conversation</i></span>
+          <span role="listitem">Notion <i>Memory</i></span>
+          <span role="listitem">Linear <i>Commitment</i></span>
+          <span role="listitem">GitHub <i>Delivery</i></span>
+          <span role="listitem">PostHog <i>Signal</i></span>
+        </div>
+      </section>
+
+      <section id="get-flow" class="closing" aria-labelledby="closing-title">
+        <p class="section-kicker reveal">Make the next move clearer</p>
+        <h2 id="closing-title" class="reveal">Meet your team<br />where the work <em>is.</em></h2>
+        <a class="button button-light reveal" href="https://github.com/CopilotKit/OpenTag" target="_blank" rel="noreferrer">Explore the repository <span>↗</span></a>
+      </section>
+    </main>
+
+    <footer>
+      <a class="brand" href="#top"><span class="brand-orb"></span>flow</a>
+      <p>For thoughtful teams in motion.</p>
+      <a class="builder" href="https://www.linkedin.com/in/atmakurakhil/" target="_blank" rel="noreferrer">Built by Akhil <span>↗</span></a>
+    </footer>
+    <script src="./flow.js"></script>
+  </body>
+</html>

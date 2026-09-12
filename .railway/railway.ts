@@ -14,7 +14,13 @@ export default defineRailway(() => {
       branch: BRANCH,
       rootDirectory: "agent",
     }),
-    build: { builder: "RAILPACK" },
+    build: {
+      builder: "RAILPACK",
+      // Flow's browser tools run in the Python agent, not only in the runtime
+      // that renders rich UI. Railpack otherwise installs the package but not
+      // Chromium itself.
+      buildCommand: "uv run playwright install --with-deps chromium",
+    },
     deploy: {
       startCommand: 'uvicorn main:app --host "" --port ${PORT:-8123}',
       healthcheckPath: "/health",
@@ -26,6 +32,11 @@ export default defineRailway(() => {
       PORT: "8123",
       AGENT_DISPLAY_NAME: preserve(),
       OPENAI_API_KEY: preserve(),
+      // The agent accepts either OpenAI or OpenRouter. Both the alternative
+      // credential and model selection must reach Railway: otherwise the
+      // documented local fallback disappears the moment it is deployed.
+      OPENROUTER_API_KEY: preserve(),
+      OPENAI_MODEL: preserve(),
       TAVILY_API_KEY: preserve(),
       DAYTONA_API_KEY: preserve(),
       DAYTONA_SNAPSHOT: preserve(),
@@ -54,6 +65,7 @@ export default defineRailway(() => {
       // runtime's copy below. Both services have to hold the same value or
       // every request the runtime makes comes back 401.
       AGENT_AUTH_HEADER: preserve(),
+      PLAYWRIGHT_BROWSERS_PATH: "0",
       // Read by the agent as the default Composio workspace user id, and by the
       // runtime as the Channel to attach to. Both, and the same value.
       INTELLIGENCE_CHANNEL_NAME: "open-tag",

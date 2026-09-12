@@ -1,4 +1,4 @@
-"""OpenTag agent prompts."""
+"""Flow agent prompts."""
 
 from collections.abc import Collection
 

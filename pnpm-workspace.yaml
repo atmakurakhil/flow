@@ -1,0 +1,4 @@
+# pnpm 11+ reads project settings from this file, not package.json.
+# Keep the RxJS floor in effect for every direct and transitive dependency.
+overrides:
+  rxjs: ^7.8.2

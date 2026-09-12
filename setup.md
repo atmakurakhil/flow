@@ -66,7 +66,7 @@ without a checked-in file.
 
 | Variable             | Required | Purpose                                                                                 |
 | -------------------- | -------- | --------------------------------------------------------------------------------------- |
-| `AGENT_DISPLAY_NAME` | No       | User-facing identity used by the agent persona and capability UI; defaults to `OpenTag` |
+| `AGENT_DISPLAY_NAME` | No       | User-facing identity used by the agent persona and capability UI; defaults to `Flow` |
 
 Set the same value on both services when they do not share an environment. For
 example, `AGENT_DISPLAY_NAME=Kite` makes the agent introduce itself and render
@@ -77,7 +77,8 @@ or Channel slug.
 
 | Variable | Required | Purpose |
 | --- | --- | --- |
-| `OPENAI_API_KEY` | Yes | Model access |
+| `OPENAI_API_KEY` | Yes* | Model access |
+| `OPENAI_OAUTH_BASE_URL` | No | Local-only [`openai-oauth`](https://github.com/EvanZhouDev/openai-oauth) proxy URL. When set, it takes precedence over API keys; use `http://127.0.0.1:10531/v1` after starting `npx openai-oauth@latest`. Do not use on Railway. |
 | `OPENAI_MODEL` | No | Defaults to `gpt-5.5` |
 | `OPENAI_REASONING_EFFORT` | No | Defaults to `low` |
 | `OPENAI_VERBOSITY` | No | Defaults to `low` |
@@ -116,7 +117,8 @@ To check a live Daytona box (create, `echo`, `git`, then delete):
 uv run --directory agent python scripts/probe_daytona.py
 ```
 
-Only `OPENAI_API_KEY` is required. Coding stays off until `DAYTONA_API_KEY` and
+*Set `OPENAI_API_KEY`, `OPENROUTER_API_KEY`, or the local-only
+`OPENAI_OAUTH_BASE_URL`. Coding stays off until `DAYTONA_API_KEY` and
 a PAT or complete GitHub App configuration are set. If both explicit methods are
 configured, or the App configuration is incomplete, coding stays off and startup
 logs the configuration problem. `GITHUB_ALLOWED_REPOS` is no longer enforced;
@@ -547,7 +549,8 @@ Production Intelligence URLs are literal configuration, the API key is
 preserved, and the Channel name is the literal `open-tag` on **both** services —
 the agent's copy is what shared Composio toolkits default their `user_id` to.
 `AGENT_DISPLAY_NAME` is preserved independently on both services and must match
-when overridden. `OPENAI_API_KEY` is required on `agent`; Tavily, Daytona/coder,
+when overridden. `OPENAI_API_KEY` or `OPENROUTER_API_KEY` is required on
+`agent`; Tavily, Daytona/coder,
 GitHub, PostHog, Linear, and the paired remote Notion variables are optional
 preserved settings.
 

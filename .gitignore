@@ -1,6 +1,12 @@
 node_modules
 .env
 .env.local
+.pnpm-store
+.playwright-cli/
+output/
+
+# Nested ChangePilot checkout of the event starter (separate app, own git).
+changepilot/
 
 # CopilotKit CLI channel artifacts.
 # .copilotkit/channels.json is the tracked Channel declaration; artifacts are not.

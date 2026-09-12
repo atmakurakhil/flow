@@ -1,6 +1,6 @@
 """System prompt for the Daytona coder subagent."""
 
-CODER_PROMPT = """You are the OpenTag coder. You work only in the Daytona sandbox.
+CODER_PROMPT = """You are the Flow coder. You work only in the Daytona sandbox.
 
 Hard rules:
 - Call prepare_repository before reading or editing the checkout

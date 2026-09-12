@@ -1,4 +1,4 @@
-"""OpenTag's general-purpose knowledge-work Deep Agent."""
+"""Flow's general-purpose knowledge-work Deep Agent."""
 
 import logging
 import os
@@ -25,6 +25,7 @@ from coding.config import (
     github_providers,
     log_configuration_warnings,
 )
+from browser import browser_tools
 from coding.subagent import build_coder_subagent
 from ag_ui_langgraph import CustomEventNames
 from langchain_core.callbacks.manager import adispatch_custom_event
@@ -167,30 +168,68 @@ def graph_recursion_limit(coding_on: bool | None = None) -> int:
 
 
 def build_agent():
-    """Build the OpenTag knowledge-work graph."""
-    api_key = os.environ.get("OPENAI_API_KEY")
-    if not api_key:
-        raise RuntimeError("Missing OPENAI_API_KEY environment variable")
+    """Build the Flow knowledge-work graph."""
+    oauth_base_url = os.environ.get("OPENAI_OAUTH_BASE_URL", "").strip()
+    openrouter_key = os.environ.get("OPENROUTER_API_KEY")
+    api_key = os.environ.get("OPENAI_API_KEY") or openrouter_key
+    use_openrouter = bool(openrouter_key) and not os.environ.get("OPENAI_API_KEY")
 
-    reasoning_effort = _validated_openai_setting(
-        "OPENAI_REASONING_EFFORT",
-        default="low",
-        allowed=VALID_REASONING_EFFORTS,
-    )
-    verbosity = _validated_openai_setting(
-        "OPENAI_VERBOSITY",
-        default="low",
-        allowed=VALID_VERBOSITY_LEVELS,
-    )
+    if not api_key and not oauth_base_url:
+        raise RuntimeError(
+            "Missing model provider: set OPENAI_API_KEY, OPENROUTER_API_KEY, "
+            "or OPENAI_OAUTH_BASE_URL"
+        )
+
     has_web_search = bool(os.environ.get("TAVILY_API_KEY"))
-    model_name = os.environ.get("OPENAI_MODEL", "gpt-5.5")
-    llm = ChatOpenAI(
-        model=model_name,
-        api_key=api_key,
-        reasoning_effort=reasoning_effort,
-        verbosity=verbosity,
-        use_responses_api=True,
-    )
+
+    if oauth_base_url:
+        # openai-oauth exposes the OpenAI Responses API from a local proxy.
+        # It authenticates upstream with the developer's ChatGPT session, so
+        # the OpenAI client only needs a non-empty placeholder API key.
+        model_name = os.environ.get("OPENAI_MODEL", "gpt-5.5")
+        llm = ChatOpenAI(
+            model=model_name,
+            api_key="openai-oauth",
+            base_url=oauth_base_url.rstrip("/"),
+            use_responses_api=True,
+        )
+        reasoning_effort = "n/a"
+        verbosity = "n/a"
+        api_backend = "openai-oauth"
+    elif use_openrouter:
+        # OpenRouter is OpenAI-compatible but does not support the Responses
+        # API, reasoning_effort, or verbosity. Use the Chat Completions path.
+        model_name = os.environ.get(
+            "OPENAI_MODEL", "google/gemma-4-31b-it:free"
+        )
+        llm = ChatOpenAI(
+            model=model_name,
+            api_key=openrouter_key,
+            base_url="https://openrouter.ai/api/v1",
+        )
+        reasoning_effort = "n/a"
+        verbosity = "n/a"
+        api_backend = "openrouter"
+    else:
+        reasoning_effort = _validated_openai_setting(
+            "OPENAI_REASONING_EFFORT",
+            default="low",
+            allowed=VALID_REASONING_EFFORTS,
+        )
+        verbosity = _validated_openai_setting(
+            "OPENAI_VERBOSITY",
+            default="low",
+            allowed=VALID_VERBOSITY_LEVELS,
+        )
+        model_name = os.environ.get("OPENAI_MODEL", "gpt-5.5")
+        llm = ChatOpenAI(
+            model=model_name,
+            api_key=api_key,
+            reasoning_effort=reasoning_effort,
+            verbosity=verbosity,
+            use_responses_api=True,
+        )
+        api_backend = "openai"
 
     providers = github_providers()
     log_configuration_warnings(providers)
@@ -218,9 +257,9 @@ def build_agent():
     )
 
     main_tools = (
-        [web_search, *internal_tools, *composio_tools]
+        [web_search, *browser_tools, *internal_tools, *composio_tools]
         if has_web_search
-        else [*internal_tools, *composio_tools]
+        else [*browser_tools, *internal_tools, *composio_tools]
     )
 
     agent_display_name = (
@@ -284,8 +323,9 @@ def build_agent():
     agent_graph = create_deep_agent(**create_kwargs)
 
     print(
-        "[AGENT] OpenTag Agent created "
-        f"with model={model_name}, reasoning={reasoning_effort}, verbosity={verbosity}"
+        f"[AGENT] Flow Agent created "
+        f"with model={model_name}, api={api_backend}, "
+        f"reasoning={reasoning_effort}, verbosity={verbosity}"
     )
     print(f"[AGENT] web search: {'enabled' if has_web_search else 'disabled'}")
     print(f"[AGENT] coding: {'enabled' if coding_on else 'disabled'}")

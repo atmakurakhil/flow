@@ -14,6 +14,7 @@
     "start": "tsx server.ts",
     "runtime": "tsx server.ts",
     "agent": "cd agent && uv run python main.py",
+    "website": "python3 -m http.server 4173",
     "check-types": "tsc --noEmit -p tsconfig.json",
     "test": "vitest run",
     "e2e": "tsx e2e/run.ts"
@@ -23,7 +24,7 @@
     "@copilotkit/channels": "0.9.2",
     "@copilotkit/runtime": "1.70.1",
     "dotenv": "^16.4.5",
-    "playwright": "^1.49.0",
+    "playwright": "1.62.0",
     "tsx": "^4.19.2",
     "undici": "^6.27.0",
     "zod": "^3.25.76"

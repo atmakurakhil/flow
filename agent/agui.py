@@ -1,4 +1,4 @@
-"""AG-UI adapter behavior for the OpenTag graph."""
+"""AG-UI adapter behavior for the Flow graph."""
 
 import json
 import logging
@@ -20,9 +20,9 @@ from composio_tools.state import ACTOR_STATE_KEY, with_forwarded_actor
 
 logger = logging.getLogger(__name__)
 
-AGENT_NAME = "opentag_research"
+AGENT_NAME = "flow_research"
 AGENT_DESCRIPTION = (
-    "OpenTag general-purpose team knowledge-work agent for research, analysis, "
+    "Flow general-purpose team knowledge-work agent for research, analysis, "
     "planning, knowledge capture, and connected workflows"
 )
 

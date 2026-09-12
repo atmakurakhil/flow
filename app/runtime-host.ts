@@ -8,7 +8,7 @@ import type { AppEnvironment } from "./env.js";
 
 export const OPENTAG_SERVICE_USER = {
   id: "opentag-service",
-  name: "OpenTag Channel Service",
+  name: "Flow Channel Service",
 } as const;
 
 type ChannelEngine = NonNullable<

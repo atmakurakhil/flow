@@ -55,7 +55,7 @@ describe("show_capabilities render-tool", () => {
     const { blocks } = renderSlackMessage(renderToIR(posts[0] as never));
     expect(blocks[0]).toMatchObject({
       type: "header",
-      text: { type: "plain_text", text: "✨ Meet OpenTag" },
+      text: { type: "plain_text", text: "✨ Meet Flow" },
     });
     const rendered = JSON.stringify(blocks);
     expect(rendered).toContain("Synthesize context");
@@ -94,10 +94,10 @@ describe("show_capabilities render-tool", () => {
       renderToIR(updates[0]?.ui as never),
     ).blocks;
     const expanded = JSON.stringify(expandedBlocks);
-    expect(expanded).toContain("Meet OpenTag");
+    expect(expanded).toContain("Meet Flow");
     expect(expanded).toContain("Synthesize context");
     expect(expanded).toContain("Take connected action");
-    expect(expanded).toContain("OpenTag in action");
+    expect(expanded).toContain("Flow in action");
     expect(expanded).toContain("A staged launch balances");
     expect(expanded).toContain("Onboarding completion rose 18%");
     expect(expanded).toContain("Pilot with the support team");

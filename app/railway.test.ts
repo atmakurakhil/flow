@@ -106,6 +106,7 @@ describe("Railway deployment graph", () => {
     expect(agent).toMatchObject({
       build: {
         builder: "RAILPACK",
+        buildCommand: "uv run playwright install --with-deps chromium",
       },
       deploy: {
         startCommand: 'uvicorn main:app --host "" --port ${PORT:-8123}',
@@ -116,6 +117,8 @@ describe("Railway deployment graph", () => {
     expect(agent.variables).toMatchObject({
       AGENT_DISPLAY_NAME: { type: "preserve" },
       OPENAI_API_KEY: { type: "preserve" },
+      OPENROUTER_API_KEY: { type: "preserve" },
+      OPENAI_MODEL: { type: "preserve" },
       TAVILY_API_KEY: { type: "preserve" },
       GITHUB_PERSONAL_ACCESS_TOKEN: { type: "preserve" },
       GITHUB_CODER_TOKEN: { type: "preserve" },
@@ -135,6 +138,7 @@ describe("Railway deployment graph", () => {
       COMPOSIO_WORKSPACE_USER_ID: { type: "preserve" },
       COMPOSIO_AUTH_CONFIGS: { type: "preserve" },
       AGENT_AUTH_HEADER: { type: "preserve" },
+      PLAYWRIGHT_BROWSERS_PATH: { type: "literal", value: "0" },
       // The agent derives the default Composio workspace user id from this, so
       // it has to reach the agent and not only the runtime.
       INTELLIGENCE_CHANNEL_NAME: { type: "literal", value: "open-tag" },
@@ -169,6 +173,9 @@ describe("Railway deployment graph", () => {
       "NOTION_MCP_AUTH_TOKEN",
       "NOTION_MCP_URL",
       "OPENAI_API_KEY",
+      "OPENAI_MODEL",
+      "OPENROUTER_API_KEY",
+      "PLAYWRIGHT_BROWSERS_PATH",
       "PORT",
       "POSTHOG_MCP_URL",
       "POSTHOG_PERSONAL_API_KEY",

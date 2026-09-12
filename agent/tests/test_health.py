@@ -18,12 +18,12 @@ def test_health_ok(monkeypatch):
     assert r.status_code == 200
     assert r.json() == {
         "status": "ok",
-        "service": "opentag-agent",
+        "service": "flow-agent",
         "version": "0.1.0",
     }
 
 
-def test_server_exposes_opentag_metadata(monkeypatch):
+def test_server_exposes_flow_metadata(monkeypatch):
     monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
     monkeypatch.delenv("TAVILY_API_KEY", raising=False)
     monkeypatch.delenv("GITHUB_PERSONAL_ACCESS_TOKEN", raising=False)
@@ -32,10 +32,10 @@ def test_server_exposes_opentag_metadata(monkeypatch):
     monkeypatch.delenv("NOTION_MCP_AUTH_TOKEN", raising=False)
     import main
 
-    assert main.app.title == "OpenTag Agent"
-    assert main.AGENT_NAME == "opentag_research"
+    assert main.app.title == "Flow Agent"
+    assert main.AGENT_NAME == "flow_research"
     assert main.AGENT_DESCRIPTION.startswith(
-        "OpenTag general-purpose team knowledge-work agent"
+        "Flow general-purpose team knowledge-work agent"
     )
 
 
@@ -140,8 +140,10 @@ def test_build_agent_with_tavily(monkeypatch, capsys):
 
 def test_build_agent_requires_openai(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
+    monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
+    monkeypatch.delenv("OPENAI_OAUTH_BASE_URL", raising=False)
     import pytest
-    with pytest.raises(RuntimeError, match="OPENAI_API_KEY"):
+    with pytest.raises(RuntimeError, match="Missing model provider"):
         agent_mod.build_agent()
 
 
@@ -177,7 +179,9 @@ def test_build_agent_does_not_expose_a_bypassable_manual_confirmation_tool(
 
     agent_mod.build_agent()
 
-    assert captured["tools"] == []
+    assert [tool.name for tool in captured["tools"]] == [
+        tool.name for tool in agent_mod.browser_tools
+    ]
 
 
 def test_build_agent_registers_composio_tools_only_when_configured(monkeypatch):
@@ -214,10 +218,11 @@ def test_build_agent_registers_composio_tools_only_when_configured(monkeypatch):
         agent_mod.build_agent()
         return [tool.name for tool in captured["tools"]]
 
-    assert build({}) == []
+    browser_names = [tool.name for tool in agent_mod.browser_tools]
+    assert build({}) == browser_names
     assert build(
         {"COMPOSIO_API_KEY": "ak_test", "COMPOSIO_TOOLKITS": "linear"}
-    ) == ["search_my_tools", "run_my_tool"]
+    ) == [*browser_names, "search_my_tools", "run_my_tool"]
 
     # The actor key must be declared whichever way that went: the AG-UI adapter
     # drops a forwarded key the state schema does not name, so "who spoke" must
@@ -235,6 +240,6 @@ def test_system_prompt_requires_confirmation_only_for_writes():
     assert "Reads and rendering never require confirmation" in prompt
 
 
-def test_system_prompt_uses_opentag_persona():
-    assert "CRITICAL: Your user-facing name is OpenTag" in agent_mod.BASE_SYSTEM_PROMPT
+def test_system_prompt_uses_flow_persona():
+    assert "CRITICAL: Your user-facing name is Flow" in agent_mod.BASE_SYSTEM_PROMPT
     assert "general-purpose team knowledge-work agent" in agent_mod.BASE_SYSTEM_PROMPT

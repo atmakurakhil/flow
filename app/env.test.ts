@@ -54,7 +54,7 @@ describe("readEnvironment", () => {
 
   it("uses the Intelligence, channel-name, and port defaults", () => {
     expect(readEnvironment(requiredEnvironment)).toMatchObject({
-      agentDisplayName: "OpenTag",
+      agentDisplayName: "Flow",
       agentUrl: "http://localhost:8123/",
       intelligenceApiKey: "cpk_test",
       intelligenceApiUrl: DEFAULT_INTELLIGENCE_API_URL,

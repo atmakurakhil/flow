@@ -1,4 +1,4 @@
-"""FastAPI server for the OpenTag knowledge-work agent."""
+"""FastAPI server for the Flow knowledge-work agent."""
 
 from collections.abc import Mapping
 import os
@@ -14,13 +14,14 @@ from pydantic import BaseModel
 from agent import build_agent
 from agent_auth import authorizes_capability, configured_secret, is_authorized
 from agui import AGENT_DESCRIPTION, AGENT_NAME, build_agui_agent
+from browser import browser_sessions
 from composio_tools.config import DEFAULT_WORKSPACE_USER_ID
 from composio_tools.connect import ConnectRefused, connect_link
 from composio_tools.runtime import composio_runtime
 from composio_tools.state import actor_key, is_personal_kind
 
 app = FastAPI(
-    title="OpenTag Agent",
+    title="Flow Agent",
     description="A team knowledge-work agent powered by Deep Agents and CopilotKit",
     version="0.1.0",
 )
@@ -72,12 +73,18 @@ app.add_middleware(
 )
 
 
+@app.on_event("shutdown")
+async def close_browser_sessions() -> None:
+    """Release Chromium processes and each conversation's ephemeral cookies."""
+    await browser_sessions.close_all()
+
+
 # HEAD as well as GET: a platform probe that sends HEAD is ordinary, and this
 # route answering GET alone made it a 405 that reads like an outage.
 @app.api_route("/health", methods=["GET", "HEAD"])
 def health():
     """Return service health."""
-    return {"status": "ok", "service": "opentag-agent", "version": "0.1.0"}
+    return {"status": "ok", "service": "flow-agent", "version": "0.1.0"}
 
 
 class ConnectRequest(BaseModel):
@@ -248,7 +255,7 @@ try:
         path="/",
     )
 
-    print("[SERVER] OpenTag Agent registered at /")
+    print("[SERVER] Flow Agent registered at /")
 except Exception as error:
     print(f"[ERROR] Failed to build agent: {error}", file=sys.stderr)
     raise
